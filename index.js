@@ -39,6 +39,9 @@ const wallet3 = new Wallet(PRIVATE_KEY_3, provider);
     console.log("after balance wallet1: ", utils.formatEther(await wallet1.getBalance()))
     console.log("after balance wallet2: ", utils.formatEther(await wallet2.getBalance()))
     console.log("after balance wallet3: ", utils.formatEther(await wallet3.getBalance()))
+
+    const addresses = await findAddresses(wallet1.address);
+    console.log("addresses", addresses);
 })();
 
 // TODO
@@ -92,21 +95,21 @@ async function  payroll(amount, sender, employees) {
 }
 
 
-// function findAddresses(address) return list of addresses
-// async function getAddresses(){
-//     const addresses = new Set();
-//     const blockNumber = provider.getBlockNumber;
+//function findAddresses(address) return list of addresses
+async function findAddresses(address){
+    const addresses = new Set();
+    const blockNumber = await provider.getBlockNumber();
 
-//     const block = await provider.getBlockWithTransactions(blockNumber);
+    const block = await provider.getBlockWithTransactions(blockNumber);
 
-//     for (const txn of block.transactions){
-//         addresses.add(txn.to)
-//     }
+    for (const txn of block.transactions){
+        if (txn.from === address) addresses.add(txn.to)
+    }
 
-//     return Array.from(addresses);
+    return Array.from(addresses);
     
     
-// }
+}
 
 // getAddresses()
 // provider.getBlockNumber()
